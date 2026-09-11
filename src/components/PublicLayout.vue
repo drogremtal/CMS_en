@@ -79,6 +79,18 @@
             >
               Все тесты
             </router-link>
+            <router-link
+              v-if="helpdeskEnabled"
+              to="/site/helpdesk"
+              :class="[
+                'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                $route.path === '/site/helpdesk'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              ]"
+            >
+              Поддержка
+            </router-link>
           </nav>
 
           <!-- Admin Link -->
@@ -120,6 +132,14 @@
             class="block px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg"
           >
             Тесты
+          </router-link>
+          <router-link
+            v-if="helpdeskEnabled"
+            to="/site/helpdesk"
+            @click="mobileMenuOpen = false"
+            class="block px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg"
+          >
+            Поддержка
           </router-link>
           <router-link
             to="/"
@@ -167,6 +187,11 @@
                   Тесты
                 </router-link>
               </li>
+              <li v-if="helpdeskEnabled">
+                <router-link to="/site/helpdesk" class="text-sm text-slate-400 hover:text-white transition-colors">
+                  Поддержка
+                </router-link>
+              </li>
             </ul>
           </div>
           <div>
@@ -190,13 +215,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { pagesApi, testsApi } from '../services/api'
+import { pagesApi, testsApi, helpdeskSettingsApi } from '../services/api'
 import type { Page, Test } from '../types'
 
 const route = useRoute()
 const mobileMenuOpen = ref(false)
 const allPages = ref<Page[]>([])
 const allTests = ref<Test[]>([])
+const helpdeskEnabled = ref(false)
 
 const publishedPages = computed(() =>
   allPages.value
@@ -220,5 +246,8 @@ onMounted(async () => {
   console.log('Pages loaded in PublicLayout:', allPages.value)
   allTests.value = await testsApi.getAll()
   console.log('Tests loaded in PublicLayout:', allTests.value)
+  const helpdeskSettings = await helpdeskSettingsApi.get()
+  helpdeskEnabled.value = helpdeskSettings.enabled
+  console.log('HelpDesk enabled:', helpdeskEnabled.value)
 })
 </script>
