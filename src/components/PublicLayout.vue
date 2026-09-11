@@ -215,7 +215,10 @@ function getTestsForPage(pageId: string): Test[] {
 }
 
 onMounted(async () => {
+  console.log('PublicLayout mounted')
   allPages.value = await pagesApi.getAll()
+  console.log('Pages loaded in PublicLayout:', allPages.value)
   allTests.value = await testsApi.getAll()
+  console.log('Tests loaded in PublicLayout:', allTests.value)
 })
 </script>

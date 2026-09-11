@@ -326,6 +326,9 @@ export const pagesApi = {
   },
 };
 
+// Инициализация данных при загрузке модуля
+initializeData();
+
 // Media API
 export const mediaApi = {
   getAll: async (): Promise<MediaItem[]> => {

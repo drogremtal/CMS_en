@@ -168,10 +168,20 @@ async function loadPage() {
   loading.value = true
   const slug = route.params.slug as string
   
-  const allPages = await pagesApi.getAll()
-  page.value = allPages.find(p => p.slug === slug && p.status === 'published') || null
+  console.log('Loading page with slug:', slug)
   
-  allTests.value = await testsApi.getAll()
+  try {
+    const allPages = await pagesApi.getAll()
+    console.log('All pages loaded:', allPages)
+    
+    page.value = allPages.find(p => p.slug === slug && p.status === 'published') || null
+    console.log('Found page:', page.value)
+    
+    allTests.value = await testsApi.getAll()
+    console.log('All tests loaded:', allTests.value)
+  } catch (error) {
+    console.error('Error loading page:', error)
+  }
   
   loading.value = false
 }
