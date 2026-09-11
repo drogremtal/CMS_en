@@ -74,6 +74,55 @@ export interface Test {
   linkedPageId?: string; // ID страницы, к которой привязан тест
 }
 
+export interface Ticket {
+  id: string;
+  title: string;
+  description: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  category: string;
+  reporter: string;
+  reporterEmail: string;
+  assignee?: string;
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt?: string;
+  comments: TicketComment[];
+  attachments: TicketAttachment[];
+}
+
+export interface TicketComment {
+  id: string;
+  ticketId: string;
+  author: string;
+  authorEmail: string;
+  content: string;
+  createdAt: string;
+  isInternal: boolean; // Внутренний комментарий (виден только сотрудникам)
+}
+
+export interface TicketAttachment {
+  id: string;
+  ticketId: string;
+  fileName: string;
+  fileSize: number;
+  fileType: string;
+  uploadedAt: string;
+  uploadedBy: string;
+}
+
+export interface HelpDeskSettings {
+  enabled: boolean;
+  defaultPriority: 'low' | 'medium' | 'high' | 'urgent';
+  defaultCategory: string;
+  categories: string[];
+  autoAssign: boolean;
+  emailNotifications: boolean;
+  slaEnabled: boolean;
+  slaResponseTime: number; // в часах
+  slaResolutionTime: number; // в часах
+}
+
 export interface Question {
   id: string;
   text: string;

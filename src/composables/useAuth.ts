@@ -100,5 +100,6 @@ export const pagePermissions: Record<string, string[]> = {
   '/roles': ['roles.view'],
   '/tests': ['tests.view'],
   '/tests/new': ['tests.create'],
+  '/helpdesk': ['helpdesk.view'],
   '/settings': ['settings.view'],
 }

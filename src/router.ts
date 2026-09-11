@@ -16,6 +16,8 @@ import RolesPage from './pages/RolesPage.vue'
 import TestsList from './pages/TestsList.vue'
 import TestEditor from './pages/TestEditor.vue'
 import LoginPage from './pages/LoginPage.vue'
+import HelpDesk from './pages/HelpDesk.vue'
+import TicketView from './pages/TicketView.vue'
 
 const routes = [
   { path: '/login', name: 'Login', component: LoginPage },
@@ -30,6 +32,8 @@ const routes = [
   { path: '/tests', name: 'Tests', component: TestsList },
   { path: '/tests/new', name: 'TestNew', component: TestEditor },
   { path: '/tests/edit/:id', name: 'TestEdit', component: TestEditor },
+  { path: '/helpdesk', name: 'HelpDesk', component: HelpDesk },
+  { path: '/helpdesk/:id', name: 'TicketView', component: TicketView },
   { path: '/settings', name: 'Settings', component: SettingsPage },
   {
     path: '/site',

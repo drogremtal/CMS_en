@@ -269,6 +269,127 @@
           </div>
         </div>
 
+        <!-- HelpDesk -->
+        <div v-if="activeSection === 'helpdesk'" class="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+          <h3 class="text-lg font-semibold text-slate-800">Модуль HelpDesk</h3>
+          
+          <div class="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div>
+              <p class="text-sm font-medium text-slate-800">Включить модуль HelpDesk</p>
+              <p class="text-xs text-slate-600 mt-0.5">Система управления заявками и обращениями</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" v-model="helpdeskSettings.enabled" class="sr-only peer" />
+              <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div v-if="helpdeskSettings.enabled" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Приоритет по умолчанию</label>
+              <select v-model="helpdeskSettings.defaultPriority" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="low">Низкий</option>
+                <option value="medium">Средний</option>
+                <option value="high">Высокий</option>
+                <option value="urgent">Срочный</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Категория по умолчанию</label>
+              <select v-model="helpdeskSettings.defaultCategory" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option v-for="cat in helpdeskSettings.categories" :key="cat" :value="cat">{{ cat }}</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Категории тикетов</label>
+              <div class="space-y-2">
+                <div v-for="(cat, index) in helpdeskSettings.categories" :key="index" class="flex items-center gap-2">
+                  <input
+                    v-model="helpdeskSettings.categories[index]"
+                    type="text"
+                    class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    @click="removeCategory(index)"
+                    class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+                <button
+                  @click="addCategory"
+                  class="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  + Добавить категорию
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-lg">
+              <div>
+                <p class="text-sm font-medium text-slate-700">Автоматическое назначение</p>
+                <p class="text-xs text-slate-500 mt-0.5">Автоматически назначать исполнителя для новых тикетов</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" v-model="helpdeskSettings.autoAssign" class="sr-only peer" />
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-lg">
+              <div>
+                <p class="text-sm font-medium text-slate-700">Email уведомления</p>
+                <p class="text-xs text-slate-500 mt-0.5">Отправлять уведомления о новых тикетах по email</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" v-model="helpdeskSettings.emailNotifications" class="sr-only peer" />
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-lg">
+              <div>
+                <p class="text-sm font-medium text-slate-700">SLA (Service Level Agreement)</p>
+                <p class="text-xs text-slate-500 mt-0.5">Контроль времени реакции и решения тикетов</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" v-model="helpdeskSettings.slaEnabled" class="sr-only peer" />
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div v-if="helpdeskSettings.slaEnabled" class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Время реакции (часы)</label>
+                <input
+                  v-model.number="helpdeskSettings.slaResponseTime"
+                  type="number"
+                  min="1"
+                  class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Время решения (часы)</label>
+                <input
+                  v-model.number="helpdeskSettings.slaResolutionTime"
+                  type="number"
+                  min="1"
+                  class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div v-if="helpdeskSettings.enabled" class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <p class="text-sm font-medium text-emerald-800">✓ Модуль HelpDesk включен</p>
+            <p class="text-xs text-emerald-600 mt-1">Пункт меню HelpDesk доступен в боковой панели</p>
+          </div>
+        </div>
+
         <!-- Default for other tabs -->
         <div v-if="activeSection === 'appearance' || activeSection === 'email'" class="bg-white rounded-xl border border-slate-200 p-6">
           <h3 class="text-lg font-semibold text-slate-800 mb-4">
@@ -282,10 +403,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { helpdeskSettingsApi } from '../services/api'
+import type { HelpDeskSettings } from '../types'
 
 const activeSection = ref('general')
 const saved = ref(false)
+
+const helpdeskSettings = ref<HelpDeskSettings>({
+  enabled: false,
+  defaultPriority: 'medium',
+  defaultCategory: 'Общий вопрос',
+  categories: ['Техническая проблема', 'Баг', 'Запрос на изменение', 'Общий вопрос', 'Предложение'],
+  autoAssign: false,
+  emailNotifications: true,
+  slaEnabled: false,
+  slaResponseTime: 24,
+  slaResolutionTime: 72,
+})
+
+onMounted(async () => {
+  helpdeskSettings.value = await helpdeskSettingsApi.get()
+})
+
+function addCategory() {
+  helpdeskSettings.value.categories.push('')
+}
+
+function removeCategory(index: number) {
+  helpdeskSettings.value.categories.splice(index, 1)
+}
 
 // OIDC settings
 const oidcEnabled = ref(false)
@@ -302,11 +449,15 @@ const sections = [
   { id: 'email', label: 'Email' },
   { id: 'security', label: 'Безопасность' },
   { id: 'oidc', label: 'OIDC Авторизация' },
+  { id: 'helpdesk', label: 'HelpDesk' },
   { id: 'database', label: 'База данных' },
   { id: 'system', label: 'Система' },
 ]
 
-function handleSave() {
+async function handleSave() {
+  if (activeSection.value === 'helpdesk') {
+    await helpdeskSettingsApi.update(helpdeskSettings.value)
+  }
   saved.value = true
   setTimeout(() => { saved.value = false }, 3000)
 }

@@ -53,6 +53,9 @@
           <svg v-else-if="item.icon === 'tests'" class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
           </svg>
+          <svg v-else-if="item.icon === 'helpdesk'" class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
           <svg v-else-if="item.icon === 'settings'" class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -248,9 +251,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
+import { helpdeskSettingsApi } from '../services/api'
 
 const collapsed = ref(false)
 const route = useRoute()
+const helpdeskEnabled = ref(false)
 const showProfileMenu = ref(false)
 const profileMenuRef = ref<HTMLElement | null>(null)
 
@@ -269,26 +274,31 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
+  const settings = await helpdeskSettingsApi.get()
+  helpdeskEnabled.value = settings.enabled
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-const navItems = [
+const allNavItems = [
   { path: '/', label: 'Дашборд', icon: 'dashboard', permissions: ['pages.view'] },
   { path: '/pages', label: 'Страницы', icon: 'pages', permissions: ['pages.view'] },
   { path: '/media', label: 'Медиа', icon: 'media', permissions: ['media.view'] },
   { path: '/users', label: 'Пользователи', icon: 'users', permissions: ['users.view'] },
   { path: '/roles', label: 'Роли', icon: 'roles', permissions: ['roles.view'] },
   { path: '/tests', label: 'Тесты', icon: 'tests', permissions: ['tests.view'] },
+  { path: '/helpdesk', label: 'HelpDesk', icon: 'helpdesk', permissions: ['helpdesk.view'] },
   { path: '/settings', label: 'Настройки', icon: 'settings', permissions: ['settings.view'] },
 ]
 
 const visibleNavItems = computed(() => {
-  return navItems.filter(item => canAccessPage(item.permissions))
+  return allNavItems
+    .filter(item => canAccessPage(item.permissions))
+    .filter(item => item.path !== '/helpdesk' || helpdeskEnabled.value)
 })
 
 onMounted(() => {

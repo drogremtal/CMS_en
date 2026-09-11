@@ -1,4 +1,4 @@
-import { Page, MediaItem, User, DashboardStats, Activity, Role, Test } from '../types';
+import { Page, MediaItem, User, DashboardStats, Activity, Role, Test, Ticket, TicketComment, HelpDeskSettings } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 const STORAGE_KEYS = {
@@ -8,6 +8,8 @@ const STORAGE_KEYS = {
   activities: 'cms_activities',
   roles: 'cms_roles',
   tests: 'cms_tests',
+  tickets: 'cms_tickets',
+  helpdesk_settings: 'cms_helpdesk_settings',
 };
 
 // Initialize with demo data
@@ -118,7 +120,7 @@ const initializeData = () => {
         id: 'admin',
         name: 'Администратор',
         description: 'Полный доступ ко всем функциям системы',
-        permissions: ['pages.view', 'pages.create', 'pages.edit', 'pages.delete', 'pages.publish', 'media.view', 'media.upload', 'media.delete', 'users.view', 'users.manage', 'roles.view', 'roles.manage', 'tests.view', 'tests.create', 'tests.edit', 'tests.delete', 'settings.view', 'settings.edit'],
+        permissions: ['pages.view', 'pages.create', 'pages.edit', 'pages.delete', 'pages.publish', 'media.view', 'media.upload', 'media.delete', 'users.view', 'users.manage', 'roles.view', 'roles.manage', 'tests.view', 'tests.create', 'tests.edit', 'tests.delete', 'helpdesk.view', 'helpdesk.manage', 'settings.view', 'settings.edit'],
         color: '#ef4444',
         createdAt: new Date().toISOString(),
         isSystem: true,
@@ -127,7 +129,7 @@ const initializeData = () => {
         id: 'editor',
         name: 'Редактор',
         description: 'Может создавать и редактировать контент',
-        permissions: ['pages.view', 'pages.create', 'pages.edit', 'pages.publish', 'media.view', 'media.upload', 'tests.view', 'tests.create', 'tests.edit'],
+        permissions: ['pages.view', 'pages.create', 'pages.edit', 'pages.publish', 'media.view', 'media.upload', 'tests.view', 'tests.create', 'tests.edit', 'helpdesk.view'],
         color: '#3b82f6',
         createdAt: new Date().toISOString(),
         isSystem: true,
@@ -136,7 +138,7 @@ const initializeData = () => {
         id: 'viewer',
         name: 'Наблюдатель',
         description: 'Только просмотр контента',
-        permissions: ['pages.view', 'media.view', 'tests.view'],
+        permissions: ['pages.view', 'media.view', 'tests.view', 'helpdesk.view'],
         color: '#64748b',
         createdAt: new Date().toISOString(),
         isSystem: true,
@@ -265,6 +267,82 @@ const initializeData = () => {
       { id: uuidv4(), action: 'created', target: 'Блог - Новости', user: 'Редактор', timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString() },
     ];
     localStorage.setItem(STORAGE_KEYS.activities, JSON.stringify(demoActivities));
+  }
+
+  if (!localStorage.getItem(STORAGE_KEYS.tickets)) {
+    const demoTickets: Ticket[] = [
+      {
+        id: uuidv4(),
+        title: 'Не работает форма обратной связи',
+        description: 'При отправке формы на странице контактов возникает ошибка 500',
+        status: 'open',
+        priority: 'high',
+        category: 'Техническая проблема',
+        reporter: 'Иван Петров',
+        reporterEmail: 'ivan@example.com',
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        comments: [],
+        attachments: [],
+      },
+      {
+        id: uuidv4(),
+        title: 'Запрос на добавление новой услуги',
+        description: 'Необходимо добавить раздел с консалтинговыми услугами',
+        status: 'in_progress',
+        priority: 'medium',
+        category: 'Запрос на изменение',
+        reporter: 'Мария Сидорова',
+        reporterEmail: 'maria@example.com',
+        assignee: 'Администратор',
+        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        comments: [
+          {
+            id: uuidv4(),
+            ticketId: '',
+            author: 'Администратор',
+            authorEmail: 'admin@company.ru',
+            content: 'Начали работу над задачей',
+            createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+            isInternal: false,
+          },
+        ],
+        attachments: [],
+      },
+      {
+        id: uuidv4(),
+        title: 'Ошибка в отображении логотипа',
+        description: 'Логотип компании отображается некорректно на мобильных устройствах',
+        status: 'resolved',
+        priority: 'low',
+        category: 'Баг',
+        reporter: 'Алексей Козлов',
+        reporterEmail: 'alexey@example.com',
+        assignee: 'Редактор',
+        createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        resolvedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        comments: [],
+        attachments: [],
+      },
+    ];
+    localStorage.setItem(STORAGE_KEYS.tickets, JSON.stringify(demoTickets));
+  }
+
+  if (!localStorage.getItem(STORAGE_KEYS.helpdesk_settings)) {
+    const defaultSettings: HelpDeskSettings = {
+      enabled: false,
+      defaultPriority: 'medium',
+      defaultCategory: 'Общий вопрос',
+      categories: ['Техническая проблема', 'Баг', 'Запрос на изменение', 'Общий вопрос', 'Предложение'],
+      autoAssign: false,
+      emailNotifications: true,
+      slaEnabled: false,
+      slaResponseTime: 24,
+      slaResolutionTime: 72,
+    };
+    localStorage.setItem(STORAGE_KEYS.helpdesk_settings, JSON.stringify(defaultSettings));
   }
 };
 
@@ -565,5 +643,111 @@ export const testsApi = {
       await activitiesApi.add({ action: 'deleted', target: `Тест: ${test.title}`, user: 'Администратор' });
     }
     return true;
+  },
+};
+
+// Tickets API
+export const ticketsApi = {
+  getAll: async (): Promise<Ticket[]> => {
+    await delay();
+    const data = localStorage.getItem(STORAGE_KEYS.tickets);
+    return data ? JSON.parse(data) : [];
+  },
+
+  getById: async (id: string): Promise<Ticket | null> => {
+    await delay();
+    const tickets = await ticketsApi.getAll();
+    return tickets.find(t => t.id === id) || null;
+  },
+
+  create: async (ticket: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt' | 'comments' | 'attachments'>): Promise<Ticket> => {
+    await delay();
+    const tickets = await ticketsApi.getAll();
+    const newTicket: Ticket = {
+      ...ticket,
+      id: uuidv4(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      comments: [],
+      attachments: [],
+    };
+    tickets.push(newTicket);
+    localStorage.setItem(STORAGE_KEYS.tickets, JSON.stringify(tickets));
+    await activitiesApi.add({ action: 'created', target: `Тикет: ${newTicket.title}`, user: 'Администратор' });
+    return newTicket;
+  },
+
+  update: async (id: string, updates: Partial<Ticket>): Promise<Ticket | null> => {
+    await delay();
+    const tickets = await ticketsApi.getAll();
+    const index = tickets.findIndex(t => t.id === id);
+    if (index === -1) return null;
+    tickets[index] = { ...tickets[index], ...updates, updatedAt: new Date().toISOString() };
+    if (updates.status === 'resolved' || updates.status === 'closed') {
+      tickets[index].resolvedAt = new Date().toISOString();
+    }
+    localStorage.setItem(STORAGE_KEYS.tickets, JSON.stringify(tickets));
+    await activitiesApi.add({ action: 'updated', target: `Тикет: ${tickets[index].title}`, user: 'Администратор' });
+    return tickets[index];
+  },
+
+  delete: async (id: string): Promise<boolean> => {
+    await delay();
+    const tickets = await ticketsApi.getAll();
+    const ticket = tickets.find(t => t.id === id);
+    const filtered = tickets.filter(t => t.id !== id);
+    localStorage.setItem(STORAGE_KEYS.tickets, JSON.stringify(filtered));
+    if (ticket) {
+      await activitiesApi.add({ action: 'deleted', target: `Тикет: ${ticket.title}`, user: 'Администратор' });
+    }
+    return true;
+  },
+
+  addComment: async (ticketId: string, comment: Omit<TicketComment, 'id' | 'createdAt' | 'ticketId'>): Promise<TicketComment | null> => {
+    await delay();
+    const tickets = await ticketsApi.getAll();
+    const ticket = tickets.find(t => t.id === ticketId);
+    if (!ticket) return null;
+    
+    const newComment: TicketComment = {
+      ...comment,
+      id: uuidv4(),
+      ticketId,
+      createdAt: new Date().toISOString(),
+    };
+    ticket.comments.push(newComment);
+    ticket.updatedAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEYS.tickets, JSON.stringify(tickets));
+    return newComment;
+  },
+};
+
+// HelpDesk Settings API
+export const helpdeskSettingsApi = {
+  get: async (): Promise<HelpDeskSettings> => {
+    await delay(100);
+    const data = localStorage.getItem(STORAGE_KEYS.helpdesk_settings);
+    if (!data) {
+      return {
+        enabled: false,
+        defaultPriority: 'medium',
+        defaultCategory: 'Общий вопрос',
+        categories: ['Техническая проблема', 'Баг', 'Запрос на изменение', 'Общий вопрос', 'Предложение'],
+        autoAssign: false,
+        emailNotifications: true,
+        slaEnabled: false,
+        slaResponseTime: 24,
+        slaResolutionTime: 72,
+      };
+    }
+    return JSON.parse(data);
+  },
+
+  update: async (settings: Partial<HelpDeskSettings>): Promise<HelpDeskSettings> => {
+    await delay();
+    const current = await helpdeskSettingsApi.get();
+    const updated = { ...current, ...settings };
+    localStorage.setItem(STORAGE_KEYS.helpdesk_settings, JSON.stringify(updated));
+    return updated;
   },
 };
