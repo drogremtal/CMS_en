@@ -19,6 +19,7 @@ import TestEditor from './pages/TestEditor.vue'
 import LoginPage from './pages/LoginPage.vue'
 import HelpDesk from './pages/HelpDesk.vue'
 import TicketView from './pages/TicketView.vue'
+import ApiDocumentation from './pages/ApiDocumentation.vue'
 
 const routes = [
   { path: '/login', name: 'Login', component: LoginPage },
@@ -35,6 +36,7 @@ const routes = [
   { path: '/tests/edit/:id', name: 'TestEdit', component: TestEditor },
   { path: '/helpdesk', name: 'HelpDesk', component: HelpDesk },
   { path: '/helpdesk/:id', name: 'TicketView', component: TicketView },
+  { path: '/api-docs', name: 'ApiDocumentation', component: ApiDocumentation },
   { path: '/settings', name: 'Settings', component: SettingsPage },
   {
     path: '/site',
