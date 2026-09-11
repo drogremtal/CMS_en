@@ -156,11 +156,15 @@ const initializeData = () => {
   }
 
   if (!localStorage.getItem(STORAGE_KEYS.tests)) {
+    const pages = JSON.parse(localStorage.getItem(STORAGE_KEYS.pages) || '[]');
+    const servicesPage = pages.find((p: Page) => p.slug === 'services');
+    
     const demoTests: Test[] = [
       {
         id: uuidv4(),
         title: 'Тест на знание основ веб-разработки',
         description: 'Проверьте свои знания в области HTML, CSS и JavaScript. Тест подойдет как начинающим, так и опытным разработчикам.',
+        linkedPageId: servicesPage?.id,
         questions: [
           {
             id: uuidv4(),

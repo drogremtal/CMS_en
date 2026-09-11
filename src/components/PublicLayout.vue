@@ -19,19 +19,55 @@
 
           <!-- Navigation -->
           <nav class="hidden md:flex items-center gap-1">
-            <router-link
+            <div
               v-for="page in publishedPages"
               :key="page.id"
-              :to="`/site/${page.slug}`"
-              :class="[
-                'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
-                currentSlug === page.slug
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              ]"
+              class="relative group"
             >
-              {{ page.title }}
-            </router-link>
+              <router-link
+                :to="`/site/${page.slug}`"
+                :class="[
+                  'px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-1',
+                  currentSlug === page.slug
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                ]"
+              >
+                {{ page.title }}
+                <svg
+                  v-if="getTestsForPage(page.id).length > 0"
+                  class="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </router-link>
+              
+              <!-- Dropdown with tests -->
+              <div
+                v-if="getTestsForPage(page.id).length > 0"
+                class="absolute left-0 top-full mt-1 w-64 bg-white border border-slate-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2"
+              >
+                <div class="px-3 py-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  Тесты по теме
+                </div>
+                <router-link
+                  v-for="test in getTestsForPage(page.id)"
+                  :key="test.id"
+                  :to="`/site/test/${test.id}`"
+                  class="block px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                >
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    <span>{{ test.title }}</span>
+                  </div>
+                </router-link>
+              </div>
+            </div>
             <router-link
               to="/site/tests"
               :class="[
@@ -41,7 +77,7 @@
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               ]"
             >
-              Тесты
+              Все тесты
             </router-link>
           </nav>
 
@@ -154,12 +190,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { pagesApi } from '../services/api'
-import type { Page } from '../types'
+import { pagesApi, testsApi } from '../services/api'
+import type { Page, Test } from '../types'
 
 const route = useRoute()
 const mobileMenuOpen = ref(false)
 const allPages = ref<Page[]>([])
+const allTests = ref<Test[]>([])
 
 const publishedPages = computed(() =>
   allPages.value
@@ -167,9 +204,18 @@ const publishedPages = computed(() =>
     .sort((a, b) => a.sortOrder - b.sortOrder)
 )
 
+const publishedTests = computed(() =>
+  allTests.value.filter(t => t.status === 'published')
+)
+
 const currentSlug = computed(() => route.params.slug as string)
+
+function getTestsForPage(pageId: string): Test[] {
+  return publishedTests.value.filter(t => t.linkedPageId === pageId)
+}
 
 onMounted(async () => {
   allPages.value = await pagesApi.getAll()
+  allTests.value = await testsApi.getAll()
 })
 </script>

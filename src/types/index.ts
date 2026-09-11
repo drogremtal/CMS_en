@@ -55,6 +55,7 @@ export interface Test {
   duration: number; // в минутах
   passingScore: number; // в процентах
   allowedRoles: string[];
+  linkedPageId?: string; // ID страницы, к которой привязан тест
 }
 
 export interface Question {

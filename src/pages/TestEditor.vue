@@ -193,6 +193,24 @@
           </div>
 
           <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1.5">Привязать к странице</label>
+            <select
+              v-model="test.linkedPageId"
+              class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Не привязан</option>
+              <option
+                v-for="page in publishedPages"
+                :key="page.id"
+                :value="page.id"
+              >
+                {{ page.title }}
+              </option>
+            </select>
+            <p class="text-xs text-slate-500 mt-1">Тест будет отображаться как подпункт меню этой страницы</p>
+          </div>
+
+          <div>
             <label class="block text-sm font-medium text-slate-700 mb-2">Доступ для ролей</label>
             <div class="space-y-2">
               <label
@@ -219,8 +237,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { testsApi, rolesApi } from '../services/api'
-import type { Test, Question, Role } from '../types'
+import { testsApi, rolesApi, pagesApi } from '../services/api'
+import type { Test, Question, Role, Page } from '../types'
 import { v4 as uuidv4 } from 'uuid'
 
 const route = useRoute()
@@ -230,6 +248,7 @@ const isNew = id === 'new' || !id
 
 const saving = ref(false)
 const allRoles = ref<Role[]>([])
+const publishedPages = ref<Page[]>([])
 
 const test = ref<Partial<Test>>({
   title: '',
@@ -302,6 +321,8 @@ async function handleSave(status?: string) {
 
 onMounted(async () => {
   allRoles.value = await rolesApi.getAll()
+  const allPages = await pagesApi.getAll()
+  publishedPages.value = allPages.filter(p => p.status === 'published')
   if (!isNew && id) {
     const data = await testsApi.getById(id)
     if (data) test.value = data
