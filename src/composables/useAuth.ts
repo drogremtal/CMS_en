@@ -63,6 +63,19 @@ export function useAuth() {
     return hasAnyPermission(requiredPermissions)
   }
 
+  const switchRole = (roleId: string) => {
+    if (currentUser.value) {
+      currentUser.value.roleId = roleId
+      // Сохраняем в localStorage
+      const userData = localStorage.getItem('cms_user')
+      if (userData) {
+        const user = JSON.parse(userData)
+        user.roleId = roleId
+        localStorage.setItem('cms_user', JSON.stringify(user))
+      }
+    }
+  }
+
   return {
     currentUser,
     currentRole,
@@ -73,6 +86,7 @@ export function useAuth() {
     hasAllPermissions,
     canAccessPage,
     init,
+    switchRole,
   }
 }
 

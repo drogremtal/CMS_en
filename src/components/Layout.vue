@@ -155,8 +155,8 @@
                 </svg>
               </div>
               <div class="hidden md:block text-left">
-                <p class="text-sm font-medium text-slate-700">Администратор</p>
-                <p class="text-xs text-slate-400">admin@company.ru</p>
+                <p class="text-sm font-medium text-slate-700">{{ currentUser?.name || 'Администратор' }}</p>
+                <p class="text-xs text-slate-400">{{ currentRole?.name || 'Роль не определена' }}</p>
               </div>
               <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -169,8 +169,14 @@
               class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2"
             >
               <div class="px-4 py-2 border-b border-slate-100">
-                <p class="text-sm font-medium text-slate-800">Администратор</p>
-                <p class="text-xs text-slate-400">Роль: Супер-администратор</p>
+                <p class="text-sm font-medium text-slate-800">{{ currentUser?.name || 'Администратор' }}</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span
+                    class="inline-block w-2 h-2 rounded-full"
+                    :style="{ backgroundColor: currentRole?.color || '#64748b' }"
+                  ></span>
+                  <p class="text-xs text-slate-500">{{ currentRole?.name || 'Роль не определена' }}</p>
+                </div>
               </div>
               <button
                 @click="showProfileMenu = false"
@@ -192,6 +198,29 @@
                 </svg>
                 Настройки
               </router-link>
+              <div class="border-t border-slate-100 my-1"></div>
+              <div class="px-4 py-2">
+                <p class="text-xs text-slate-500 mb-2">Переключить роль:</p>
+                <div class="space-y-1">
+                  <button
+                    v-for="role in roles"
+                    :key="role.id"
+                    @click="switchRole(role.id)"
+                    :class="[
+                      'w-full px-3 py-1.5 text-left text-xs rounded-lg flex items-center gap-2 transition-colors',
+                      currentRole?.id === role.id
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-slate-600 hover:bg-slate-50'
+                    ]"
+                  >
+                    <span
+                      class="inline-block w-2 h-2 rounded-full"
+                      :style="{ backgroundColor: role.color }"
+                    ></span>
+                    {{ role.name }}
+                  </button>
+                </div>
+              </div>
               <div class="border-t border-slate-100 my-1"></div>
               <button
                 @click="handleLogout"
@@ -225,7 +254,7 @@ const route = useRoute()
 const showProfileMenu = ref(false)
 const profileMenuRef = ref<HTMLElement | null>(null)
 
-const { canAccessPage, init: initAuth } = useAuth()
+const { canAccessPage, init: initAuth, currentRole, currentUser, roles, switchRole } = useAuth()
 
 const handleLogout = () => {
   showProfileMenu.value = false
