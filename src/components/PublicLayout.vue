@@ -32,6 +32,17 @@
             >
               {{ page.title }}
             </router-link>
+            <router-link
+              to="/site/tests"
+              :class="[
+                'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                $route.path === '/site/tests'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              ]"
+            >
+              Тесты
+            </router-link>
           </nav>
 
           <!-- Admin Link -->
@@ -66,6 +77,13 @@
             class="block px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg"
           >
             {{ page.title }}
+          </router-link>
+          <router-link
+            to="/site/tests"
+            @click="mobileMenuOpen = false"
+            class="block px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg"
+          >
+            Тесты
           </router-link>
           <router-link
             to="/"
@@ -106,6 +124,11 @@
               <li v-for="page in publishedPages" :key="page.id">
                 <router-link :to="`/site/${page.slug}`" class="text-sm text-slate-400 hover:text-white transition-colors">
                   {{ page.title }}
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/site/tests" class="text-sm text-slate-400 hover:text-white transition-colors">
+                  Тесты
                 </router-link>
               </li>
             </ul>

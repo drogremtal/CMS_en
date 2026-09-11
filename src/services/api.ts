@@ -156,7 +156,100 @@ const initializeData = () => {
   }
 
   if (!localStorage.getItem(STORAGE_KEYS.tests)) {
-    const demoTests: Test[] = [];
+    const demoTests: Test[] = [
+      {
+        id: uuidv4(),
+        title: 'Тест на знание основ веб-разработки',
+        description: 'Проверьте свои знания в области HTML, CSS и JavaScript. Тест подойдет как начинающим, так и опытным разработчикам.',
+        questions: [
+          {
+            id: uuidv4(),
+            text: 'Какой тег используется для создания гиперссылки в HTML?',
+            type: 'single',
+            options: ['<link>', '<a>', '<href>', '<url>'],
+            correctAnswers: [1],
+            points: 1,
+          },
+          {
+            id: uuidv4(),
+            text: 'Какие из следующих свойств CSS относятся к модели Flexbox?',
+            type: 'multiple',
+            options: ['justify-content', 'align-items', 'float', 'flex-direction'],
+            correctAnswers: [0, 1, 3],
+            points: 2,
+          },
+          {
+            id: uuidv4(),
+            text: 'Что выведет console.log(typeof null) в JavaScript?',
+            type: 'single',
+            options: ['null', 'undefined', 'object', 'number'],
+            correctAnswers: [2],
+            points: 1,
+          },
+          {
+            id: uuidv4(),
+            text: 'Какой метод массива используется для создания нового массива на основе существующего?',
+            type: 'single',
+            options: ['forEach', 'map', 'filter', 'reduce'],
+            correctAnswers: [1],
+            points: 1,
+          },
+          {
+            id: uuidv4(),
+            text: 'Опишите, что такое адаптивный дизайн (responsive design) и зачем он нужен.',
+            type: 'text',
+            options: [],
+            correctAnswers: [],
+            points: 3,
+          },
+        ],
+        status: 'published',
+        author: 'Администратор',
+        createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        duration: 15,
+        passingScore: 60,
+        allowedRoles: ['admin', 'editor', 'viewer'],
+      },
+      {
+        id: uuidv4(),
+        title: 'Тест по корпоративным стандартам',
+        description: 'Проверьте знание внутренних стандартов и процедур компании.',
+        questions: [
+          {
+            id: uuidv4(),
+            text: 'Какой протокол используется для безопасной передачи данных?',
+            type: 'single',
+            options: ['HTTP', 'FTP', 'HTTPS', 'SMTP'],
+            correctAnswers: [2],
+            points: 1,
+          },
+          {
+            id: uuidv4(),
+            text: 'Какие из следующих практик относятся к информационной безопасности?',
+            type: 'multiple',
+            options: ['Двухфакторная аутентификация', 'Использование слабых паролей', 'Шифрование данных', 'Регулярное обновление ПО'],
+            correctAnswers: [0, 2, 3],
+            points: 2,
+          },
+          {
+            id: uuidv4(),
+            text: 'Что означает аббревиатура GDPR?',
+            type: 'single',
+            options: ['General Data Protection Regulation', 'Global Data Privacy Rules', 'General Digital Privacy Regulation', 'Global Data Protection Rules'],
+            correctAnswers: [0],
+            points: 1,
+          },
+        ],
+        status: 'published',
+        author: 'Администратор',
+        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        duration: 10,
+        passingScore: 70,
+        allowedRoles: ['admin', 'editor'],
+      },
+    ];
     localStorage.setItem(STORAGE_KEYS.tests, JSON.stringify(demoTests));
   }
 

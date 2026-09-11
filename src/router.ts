@@ -9,6 +9,8 @@ import SettingsPage from './pages/SettingsPage.vue'
 import PublicLayout from './components/PublicLayout.vue'
 import PublicHome from './pages/PublicHome.vue'
 import PublicPage from './pages/PublicPage.vue'
+import PublicTestsList from './pages/PublicTestsList.vue'
+import PublicTest from './pages/PublicTest.vue'
 
 import RolesPage from './pages/RolesPage.vue'
 import TestsList from './pages/TestsList.vue'
@@ -32,6 +34,8 @@ const routes = [
     component: PublicLayout,
     children: [
       { path: '', name: 'PublicHome', component: PublicHome },
+      { path: 'tests', name: 'PublicTests', component: PublicTestsList },
+      { path: 'test/:id', name: 'PublicTest', component: PublicTest },
       { path: ':slug', name: 'PublicPage', component: PublicPage },
     ],
   },
