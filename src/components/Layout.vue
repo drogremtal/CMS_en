@@ -38,6 +38,20 @@
           <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
           <span v-if="!collapsed" class="text-sm font-medium">{{ item.label }}</span>
         </router-link>
+
+        <!-- Divider -->
+        <div class="border-t border-slate-700 my-3 mx-2"></div>
+
+        <!-- Open Site Link -->
+        <router-link
+          to="/site"
+          class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-slate-300 hover:bg-slate-800 hover:text-white"
+        >
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span v-if="!collapsed" class="text-sm font-medium">Открыть сайт</span>
+        </router-link>
       </nav>
 
       <!-- System Info -->
@@ -97,6 +111,17 @@
             </svg>
             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
+          <!-- Open Site Button -->
+          <router-link
+            to="/site"
+            class="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            Открыть сайт
+          </router-link>
+
           <!-- Profile -->
           <div class="flex items-center gap-2 pl-3 pr-2 py-1.5 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer">
             <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">

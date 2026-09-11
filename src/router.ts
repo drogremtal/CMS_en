@@ -6,6 +6,9 @@ import PagePreview from './pages/PagePreview.vue'
 import MediaLibrary from './pages/MediaLibrary.vue'
 import UsersPage from './pages/UsersPage.vue'
 import SettingsPage from './pages/SettingsPage.vue'
+import PublicLayout from './components/PublicLayout.vue'
+import PublicHome from './pages/PublicHome.vue'
+import PublicPage from './pages/PublicPage.vue'
 
 const routes = [
   { path: '/', name: 'Dashboard', component: Dashboard },
@@ -16,6 +19,14 @@ const routes = [
   { path: '/media', name: 'Media', component: MediaLibrary },
   { path: '/users', name: 'Users', component: UsersPage },
   { path: '/settings', name: 'Settings', component: SettingsPage },
+  {
+    path: '/site',
+    component: PublicLayout,
+    children: [
+      { path: '', name: 'PublicHome', component: PublicHome },
+      { path: ':slug', name: 'PublicPage', component: PublicPage },
+    ],
+  },
 ]
 
 const router = createRouter({
