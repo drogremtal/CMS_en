@@ -15,8 +15,10 @@ import PublicTest from './pages/PublicTest.vue'
 import RolesPage from './pages/RolesPage.vue'
 import TestsList from './pages/TestsList.vue'
 import TestEditor from './pages/TestEditor.vue'
+import LoginPage from './pages/LoginPage.vue'
 
 const routes = [
+  { path: '/login', name: 'Login', component: LoginPage },
   { path: '/', name: 'Dashboard', component: Dashboard },
   { path: '/pages', name: 'PagesList', component: PagesList },
   { path: '/pages/new', name: 'PageNew', component: PageEditor },

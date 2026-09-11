@@ -399,7 +399,58 @@ export const dashboardApi = {
   },
 };
 
-// User API
+// Users API
+export const usersApi = {
+  getAll: async (): Promise<User[]> => {
+    await delay();
+    const data = localStorage.getItem('cms_users');
+    return data ? JSON.parse(data) : [];
+  },
+
+  getById: async (id: string): Promise<User | null> => {
+    await delay();
+    const users = await usersApi.getAll();
+    return users.find(u => u.id === id) || null;
+  },
+
+  getByEmail: async (email: string): Promise<User | null> => {
+    await delay();
+    const users = await usersApi.getAll();
+    return users.find(u => u.email === email) || null;
+  },
+
+  create: async (user: Omit<User, 'id'>): Promise<User> => {
+    await delay();
+    const users = await usersApi.getAll();
+    const newUser: User = {
+      ...user,
+      id: uuidv4(),
+    };
+    users.push(newUser);
+    localStorage.setItem('cms_users', JSON.stringify(users));
+    return newUser;
+  },
+
+  update: async (id: string, updates: Partial<User>): Promise<User | null> => {
+    await delay();
+    const users = await usersApi.getAll();
+    const index = users.findIndex(u => u.id === id);
+    if (index === -1) return null;
+    users[index] = { ...users[index], ...updates };
+    localStorage.setItem('cms_users', JSON.stringify(users));
+    return users[index];
+  },
+
+  delete: async (id: string): Promise<boolean> => {
+    await delay();
+    const users = await usersApi.getAll();
+    const filtered = users.filter(u => u.id !== id);
+    localStorage.setItem('cms_users', JSON.stringify(filtered));
+    return true;
+  },
+};
+
+// Legacy userApi для обратной совместимости
 export const userApi = {
   getCurrent: async (): Promise<User> => {
     await delay(100);

@@ -41,6 +41,22 @@ export interface User {
   email: string;
   roleId: string;
   avatar?: string;
+  oidcSubject?: string; // ID от OIDC провайдера
+  lastLogin?: string;
+}
+
+export interface OIDCConfig {
+  enabled: boolean;
+  provider: string;
+  authority: string;
+  clientId: string;
+  clientSecret?: string;
+  redirectUri: string;
+  scope: string[];
+  roleClaim: string; // Название claim для ролей (например: 'role', 'groups', 'roles')
+  roleMapping: Record<string, string>; // Маппинг OIDC ролей на роли CMS
+  autoCreateUsers: boolean;
+  defaultRoleId: string;
 }
 
 export interface Test {

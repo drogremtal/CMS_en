@@ -158,6 +158,117 @@
           </div>
         </div>
 
+        <!-- OIDC -->
+        <div v-if="activeSection === 'oidc'" class="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+          <h3 class="text-lg font-semibold text-slate-800">OIDC Авторизация</h3>
+          
+          <div class="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div>
+              <p class="text-sm font-medium text-slate-800">Включить OIDC авторизацию</p>
+              <p class="text-xs text-slate-600 mt-0.5">Single Sign-On через корпоративный провайдер</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" v-model="oidcEnabled" class="sr-only peer" />
+              <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div v-if="oidcEnabled" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Провайдер</label>
+              <select v-model="oidcProvider" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="Azure AD">Azure AD</option>
+                <option value="Keycloak">Keycloak</option>
+                <option value="Auth0">Auth0</option>
+                <option value="Okta">Okta</option>
+                <option value="Google">Google</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Authority URL</label>
+              <input v-model="oidcAuthority" type="text" placeholder="https://login.microsoftonline.com/{tenant-id}" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Client ID</label>
+              <input v-model="oidcClientId" type="text" placeholder="your-client-id" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Redirect URI</label>
+              <input v-model="oidcRedirectUri" type="text" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div class="border-t border-slate-200 pt-4">
+              <h4 class="text-sm font-semibold text-slate-800 mb-3">Маппинг ролей</h4>
+              <p class="text-xs text-slate-500 mb-3">Сопоставьте роли из OIDC провайдера с ролями в CMS</p>
+              
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <input type="text" value="admin" class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="OIDC роль" />
+                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                  <select class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm">
+                    <option>Администратор</option>
+                    <option>Редактор</option>
+                    <option>Наблюдатель</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-3">
+                  <input type="text" value="editor" class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="OIDC роль" />
+                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                  <select class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm">
+                    <option>Администратор</option>
+                    <option selected>Редактор</option>
+                    <option>Наблюдатель</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-3">
+                  <input type="text" value="viewer" class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="OIDC роль" />
+                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                  <select class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm">
+                    <option>Администратор</option>
+                    <option>Редактор</option>
+                    <option selected>Наблюдатель</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-lg">
+              <div>
+                <p class="text-sm font-medium text-slate-700">Автоматическое создание пользователей</p>
+                <p class="text-xs text-slate-500 mt-0.5">Создавать аккаунт при первом входе через OIDC</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" v-model="oidcAutoCreate" class="sr-only peer" checked />
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">Роль по умолчанию</label>
+              <select v-model="oidcDefaultRole" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="admin">Администратор</option>
+                <option value="editor">Редактор</option>
+                <option value="viewer" selected>Наблюдатель</option>
+              </select>
+              <p class="text-xs text-slate-500 mt-1">Назначается, если роль не найдена в маппинге</p>
+            </div>
+          </div>
+
+          <div v-if="oidcEnabled" class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <p class="text-sm font-medium text-emerald-800">✓ OIDC настроен</p>
+            <p class="text-xs text-emerald-600 mt-1">Пользователи смогут входить через {{ oidcProvider }}</p>
+          </div>
+        </div>
+
         <!-- Default for other tabs -->
         <div v-if="activeSection === 'appearance' || activeSection === 'email'" class="bg-white rounded-xl border border-slate-200 p-6">
           <h3 class="text-lg font-semibold text-slate-800 mb-4">
@@ -176,11 +287,21 @@ import { ref } from 'vue'
 const activeSection = ref('general')
 const saved = ref(false)
 
+// OIDC settings
+const oidcEnabled = ref(false)
+const oidcProvider = ref('Azure AD')
+const oidcAuthority = ref('https://login.microsoftonline.com/{tenant-id}')
+const oidcClientId = ref('')
+const oidcRedirectUri = ref(window.location.origin + '/auth/callback')
+const oidcAutoCreate = ref(true)
+const oidcDefaultRole = ref('viewer')
+
 const sections = [
   { id: 'general', label: 'Общие' },
   { id: 'appearance', label: 'Внешний вид' },
   { id: 'email', label: 'Email' },
   { id: 'security', label: 'Безопасность' },
+  { id: 'oidc', label: 'OIDC Авторизация' },
   { id: 'database', label: 'База данных' },
   { id: 'system', label: 'Система' },
 ]
