@@ -25,7 +25,7 @@
       <!-- Navigation -->
       <nav class="flex-1 py-4 px-2 space-y-1">
         <router-link
-          v-for="item in navItems"
+          v-for="item in visibleNavItems"
           :key="item.path"
           :to="item.path"
           :class="[
@@ -146,19 +146,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const collapsed = ref(false)
 const route = useRoute()
 
+import { useAuth, pagePermissions } from '../composables/useAuth'
+
+const { canAccessPage, init: initAuth } = useAuth()
+
 const navItems = [
-  { path: '/', label: 'Дашборд', icon: 'DashboardIcon' },
-  { path: '/pages', label: 'Страницы', icon: 'PagesIcon' },
-  { path: '/media', label: 'Медиа', icon: 'MediaIcon' },
-  { path: '/users', label: 'Пользователи', icon: 'UsersIcon' },
-  { path: '/settings', label: 'Настройки', icon: 'SettingsIcon' },
+  { path: '/', label: 'Дашборд', icon: 'DashboardIcon', permissions: ['pages.view'] },
+  { path: '/pages', label: 'Страницы', icon: 'PagesIcon', permissions: ['pages.view'] },
+  { path: '/media', label: 'Медиа', icon: 'MediaIcon', permissions: ['media.view'] },
+  { path: '/users', label: 'Пользователи', icon: 'UsersIcon', permissions: ['users.view'] },
+  { path: '/roles', label: 'Роли', icon: 'RolesIcon', permissions: ['roles.view'] },
+  { path: '/tests', label: 'Тесты', icon: 'TestsIcon', permissions: ['tests.view'] },
+  { path: '/settings', label: 'Настройки', icon: 'SettingsIcon', permissions: ['settings.view'] },
 ]
+
+const visibleNavItems = computed(() => {
+  return navItems.filter(item => canAccessPage(item.permissions))
+})
+
+onMounted(() => {
+  initAuth()
+})
 
 const pageTitle = computed(() => {
   const titles: Record<string, string> = {
@@ -166,6 +180,8 @@ const pageTitle = computed(() => {
     '/pages': 'Страницы',
     '/media': 'Медиа-библиотека',
     '/users': 'Пользователи',
+    '/roles': 'Управление ролями',
+    '/tests': 'Тесты',
     '/settings': 'Настройки',
   }
   return titles[route.path] || 'Enterprise CMS'

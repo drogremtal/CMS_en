@@ -1,4 +1,4 @@
-import { Page, MediaItem, User, DashboardStats, Activity } from '../types';
+import { Page, MediaItem, User, DashboardStats, Activity, Role, Test } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 const STORAGE_KEYS = {
@@ -6,6 +6,8 @@ const STORAGE_KEYS = {
   media: 'cms_media',
   user: 'cms_user',
   activities: 'cms_activities',
+  roles: 'cms_roles',
+  tests: 'cms_tests',
 };
 
 // Initialize with demo data
@@ -110,14 +112,52 @@ const initializeData = () => {
     localStorage.setItem(STORAGE_KEYS.media, JSON.stringify(demoMedia));
   }
 
+  if (!localStorage.getItem(STORAGE_KEYS.roles)) {
+    const demoRoles: Role[] = [
+      {
+        id: 'admin',
+        name: 'Администратор',
+        description: 'Полный доступ ко всем функциям системы',
+        permissions: ['pages.view', 'pages.create', 'pages.edit', 'pages.delete', 'pages.publish', 'media.view', 'media.upload', 'media.delete', 'users.view', 'users.manage', 'roles.view', 'roles.manage', 'tests.view', 'tests.create', 'tests.edit', 'tests.delete', 'settings.view', 'settings.edit'],
+        color: '#ef4444',
+        createdAt: new Date().toISOString(),
+        isSystem: true,
+      },
+      {
+        id: 'editor',
+        name: 'Редактор',
+        description: 'Может создавать и редактировать контент',
+        permissions: ['pages.view', 'pages.create', 'pages.edit', 'pages.publish', 'media.view', 'media.upload', 'tests.view', 'tests.create', 'tests.edit'],
+        color: '#3b82f6',
+        createdAt: new Date().toISOString(),
+        isSystem: true,
+      },
+      {
+        id: 'viewer',
+        name: 'Наблюдатель',
+        description: 'Только просмотр контента',
+        permissions: ['pages.view', 'media.view', 'tests.view'],
+        color: '#64748b',
+        createdAt: new Date().toISOString(),
+        isSystem: true,
+      },
+    ];
+    localStorage.setItem(STORAGE_KEYS.roles, JSON.stringify(demoRoles));
+  }
+
   if (!localStorage.getItem(STORAGE_KEYS.user)) {
     const demoUser: User = {
       id: uuidv4(),
       name: 'Администратор',
       email: 'admin@company.ru',
-      role: 'admin',
+      roleId: 'admin',
     };
     localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(demoUser));
+  }
+
+  if (!localStorage.getItem(STORAGE_KEYS.tests)) {
+    const demoTests: Test[] = [];
+    localStorage.setItem(STORAGE_KEYS.tests, JSON.stringify(demoTests));
   }
 
   if (!localStorage.getItem(STORAGE_KEYS.activities)) {
@@ -267,6 +307,112 @@ export const userApi = {
   getCurrent: async (): Promise<User> => {
     await delay(100);
     const data = localStorage.getItem(STORAGE_KEYS.user);
-    return data ? JSON.parse(data) : { id: '1', name: 'Admin', email: 'admin@test.com', role: 'admin' };
+    return data ? JSON.parse(data) : { id: '1', name: 'Admin', email: 'admin@test.com', roleId: 'admin' };
+  },
+};
+
+// Roles API
+export const rolesApi = {
+  getAll: async (): Promise<Role[]> => {
+    await delay();
+    const data = localStorage.getItem(STORAGE_KEYS.roles);
+    return data ? JSON.parse(data) : [];
+  },
+
+  getById: async (id: string): Promise<Role | null> => {
+    await delay();
+    const roles = await rolesApi.getAll();
+    return roles.find(r => r.id === id) || null;
+  },
+
+  create: async (role: Omit<Role, 'id' | 'createdAt'>): Promise<Role> => {
+    await delay();
+    const roles = await rolesApi.getAll();
+    const newRole: Role = {
+      ...role,
+      id: uuidv4(),
+      createdAt: new Date().toISOString(),
+    };
+    roles.push(newRole);
+    localStorage.setItem(STORAGE_KEYS.roles, JSON.stringify(roles));
+    await activitiesApi.add({ action: 'created', target: `Роль: ${newRole.name}`, user: 'Администратор' });
+    return newRole;
+  },
+
+  update: async (id: string, updates: Partial<Role>): Promise<Role | null> => {
+    await delay();
+    const roles = await rolesApi.getAll();
+    const index = roles.findIndex(r => r.id === id);
+    if (index === -1) return null;
+    roles[index] = { ...roles[index], ...updates };
+    localStorage.setItem(STORAGE_KEYS.roles, JSON.stringify(roles));
+    await activitiesApi.add({ action: 'updated', target: `Роль: ${roles[index].name}`, user: 'Администратор' });
+    return roles[index];
+  },
+
+  delete: async (id: string): Promise<boolean> => {
+    await delay();
+    const roles = await rolesApi.getAll();
+    const role = roles.find(r => r.id === id);
+    if (role?.isSystem) return false; // Нельзя удалять системные роли
+    const filtered = roles.filter(r => r.id !== id);
+    localStorage.setItem(STORAGE_KEYS.roles, JSON.stringify(filtered));
+    if (role) {
+      await activitiesApi.add({ action: 'deleted', target: `Роль: ${role.name}`, user: 'Администратор' });
+    }
+    return true;
+  },
+};
+
+// Tests API
+export const testsApi = {
+  getAll: async (): Promise<Test[]> => {
+    await delay();
+    const data = localStorage.getItem(STORAGE_KEYS.tests);
+    return data ? JSON.parse(data) : [];
+  },
+
+  getById: async (id: string): Promise<Test | null> => {
+    await delay();
+    const tests = await testsApi.getAll();
+    return tests.find(t => t.id === id) || null;
+  },
+
+  create: async (test: Omit<Test, 'id' | 'createdAt' | 'updatedAt'>): Promise<Test> => {
+    await delay();
+    const tests = await testsApi.getAll();
+    const newTest: Test = {
+      ...test,
+      id: uuidv4(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    tests.push(newTest);
+    localStorage.setItem(STORAGE_KEYS.tests, JSON.stringify(tests));
+    await activitiesApi.add({ action: 'created', target: `Тест: ${newTest.title}`, user: 'Администратор' });
+    return newTest;
+  },
+
+  update: async (id: string, updates: Partial<Test>): Promise<Test | null> => {
+    await delay();
+    const tests = await testsApi.getAll();
+    const index = tests.findIndex(t => t.id === id);
+    if (index === -1) return null;
+    tests[index] = { ...tests[index], ...updates, updatedAt: new Date().toISOString() };
+    localStorage.setItem(STORAGE_KEYS.tests, JSON.stringify(tests));
+    await activitiesApi.add({ action: 'updated', target: `Тест: ${tests[index].title}`, user: 'Администратор' });
+    return tests[index];
+  },
+
+  delete: async (id: string): Promise<boolean> => {
+    await delay();
+    const tests = await testsApi.getAll();
+    const test = tests.find(t => t.id === id);
+    const filtered = tests.filter(t => t.id !== id);
+    localStorage.setItem(STORAGE_KEYS.tests, JSON.stringify(filtered));
+    if (test) {
+      await activitiesApi.add({ action: 'deleted', target: `Тест: ${test.title}`, user: 'Администратор' });
+    }
+    return true;
   },
 };

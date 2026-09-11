@@ -25,12 +25,45 @@ export interface MediaItem {
   alt: string;
 }
 
+export interface Role {
+  id: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  color: string;
+  createdAt: string;
+  isSystem: boolean;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'editor' | 'viewer';
+  roleId: string;
   avatar?: string;
+}
+
+export interface Test {
+  id: string;
+  title: string;
+  description: string;
+  questions: Question[];
+  status: 'draft' | 'published' | 'archived';
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+  duration: number; // в минутах
+  passingScore: number; // в процентах
+  allowedRoles: string[];
+}
+
+export interface Question {
+  id: string;
+  text: string;
+  type: 'single' | 'multiple' | 'text';
+  options: string[];
+  correctAnswers: number[];
+  points: number;
 }
 
 export interface DashboardStats {

@@ -18,42 +18,18 @@
 
     <!-- Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white rounded-xl border border-slate-200 p-5">
+      <div
+        v-for="role in roles"
+        :key="role.id"
+        class="bg-white rounded-xl border border-slate-200 p-5"
+      >
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
-            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center" :style="{ backgroundColor: role.color + '20' }">
+            <div class="w-5 h-5 rounded" :style="{ backgroundColor: role.color }"></div>
           </div>
           <div>
-            <p class="text-2xl font-bold text-slate-800">1</p>
-            <p class="text-sm text-slate-500">Администраторов</p>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl border border-slate-200 p-5">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-slate-800">2</p>
-            <p class="text-sm text-slate-500">Редакторов</p>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl border border-slate-200 p-5">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center">
-            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-slate-800">2</p>
-            <p class="text-sm text-slate-500">Наблюдателей</p>
+            <p class="text-2xl font-bold text-slate-800">{{ getUserCount(role.id) }}</p>
+            <p class="text-sm text-slate-500">{{ role.name }}</p>
           </div>
         </div>
       </div>
@@ -90,8 +66,8 @@
               </div>
             </td>
             <td class="px-5 py-4">
-              <span :class="['inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border', getRoleClass(user.role)]">
-                {{ getRoleLabel(user.role) }}
+              <span :class="['inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border', getRoleClass(user.roleId)]">
+                {{ getRoleLabel(user.roleId) }}
               </span>
             </td>
             <td class="px-5 py-4 hidden md:table-cell">
@@ -119,32 +95,18 @@
     <div class="bg-white rounded-xl border border-slate-200 p-5">
       <h3 class="font-semibold text-slate-800 mb-4">Описание ролей</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="p-4 rounded-lg border border-red-100 bg-red-50/50">
+        <div
+          v-for="role in roles"
+          :key="role.id"
+          class="p-4 rounded-lg border"
+          :style="{ borderColor: role.color + '40', backgroundColor: role.color + '08' }"
+        >
           <div class="flex items-center gap-2 mb-2">
-            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            <span class="font-medium text-slate-800">Администратор</span>
+            <div class="w-5 h-5 rounded" :style="{ backgroundColor: role.color }"></div>
+            <span class="font-medium text-slate-800">{{ role.name }}</span>
           </div>
-          <p class="text-xs text-slate-600">Полный доступ ко всем функциям CMS, включая управление пользователями и настройками системы.</p>
-        </div>
-        <div class="p-4 rounded-lg border border-blue-100 bg-blue-50/50">
-          <div class="flex items-center gap-2 mb-2">
-            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            <span class="font-medium text-slate-800">Редактор</span>
-          </div>
-          <p class="text-xs text-slate-600">Может создавать, редактировать и публиковать страницы. Управление медиа-библиотекой.</p>
-        </div>
-        <div class="p-4 rounded-lg border border-slate-200 bg-slate-50/50">
-          <div class="flex items-center gap-2 mb-2">
-            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <span class="font-medium text-slate-800">Наблюдатель</span>
-          </div>
-          <p class="text-xs text-slate-600">Доступ только для просмотра контента. Не может вносить изменения.</p>
+          <p class="text-xs text-slate-600">{{ role.description }}</p>
+          <p class="text-xs text-slate-400 mt-2">{{ role.permissions.length }} прав доступа</p>
         </div>
       </div>
     </div>
@@ -152,27 +114,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+import { rolesApi } from '../services/api'
+import type { Role } from '../types'
+
+const roles = ref<Role[]>([])
 
 const users = ref([
-  { id: '1', name: 'Иванов Алексей', email: 'ivanov@company.ru', role: 'admin', lastActive: '2 мин назад', status: 'active' },
-  { id: '2', name: 'Петрова Мария', email: 'petrova@company.ru', role: 'editor', lastActive: '1 час назад', status: 'active' },
-  { id: '3', name: 'Сидоров Дмитрий', email: 'sidorov@company.ru', role: 'editor', lastActive: '3 часа назад', status: 'active' },
-  { id: '4', name: 'Козлова Анна', email: 'kozlova@company.ru', role: 'viewer', lastActive: '1 день назад', status: 'active' },
-  { id: '5', name: 'Морозов Игорь', email: 'morozov@company.ru', role: 'viewer', lastActive: '5 дней назад', status: 'inactive' },
+  { id: '1', name: 'Иванов Алексей', email: 'ivanov@company.ru', roleId: 'admin', lastActive: '2 мин назад', status: 'active' },
+  { id: '2', name: 'Петрова Мария', email: 'petrova@company.ru', roleId: 'editor', lastActive: '1 час назад', status: 'active' },
+  { id: '3', name: 'Сидоров Дмитрий', email: 'sidorov@company.ru', roleId: 'editor', lastActive: '3 часа назад', status: 'active' },
+  { id: '4', name: 'Козлова Анна', email: 'kozlova@company.ru', roleId: 'viewer', lastActive: '1 день назад', status: 'active' },
+  { id: '5', name: 'Морозов Игорь', email: 'morozov@company.ru', roleId: 'viewer', lastActive: '5 дней назад', status: 'inactive' },
 ])
 
-function getRoleLabel(role: string): string {
-  const labels: Record<string, string> = { admin: 'Администратор', editor: 'Редактор', viewer: 'Наблюдатель' }
-  return labels[role] || role
+onMounted(async () => {
+  roles.value = await rolesApi.getAll()
+})
+
+function getRoleLabel(roleId: string): string {
+  const role = roles.value.find(r => r.id === roleId)
+  return role?.name || roleId
 }
 
-function getRoleClass(role: string): string {
-  const classes: Record<string, string> = {
-    admin: 'bg-red-50 text-red-700 border-red-200',
-    editor: 'bg-blue-50 text-blue-700 border-blue-200',
-    viewer: 'bg-slate-50 text-slate-600 border-slate-200',
+function getRoleClass(roleId: string): string {
+  const role = roles.value.find(r => r.id === roleId)
+  if (!role) return 'bg-slate-50 text-slate-600 border-slate-200'
+  
+  const colorMap: Record<string, string> = {
+    '#ef4444': 'bg-red-50 text-red-700 border-red-200',
+    '#3b82f6': 'bg-blue-50 text-blue-700 border-blue-200',
+    '#64748b': 'bg-slate-50 text-slate-600 border-slate-200',
   }
-  return classes[role] || ''
+  return colorMap[role.color] || 'bg-slate-50 text-slate-600 border-slate-200'
+}
+
+function getUserCount(roleId: string): number {
+  return users.value.filter(u => u.roleId === roleId).length
 }
 </script>
