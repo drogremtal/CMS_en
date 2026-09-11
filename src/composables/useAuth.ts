@@ -6,12 +6,35 @@ const currentUser = ref<User | null>(null)
 const roles = ref<Role[]>([])
 const initialized = ref(false)
 
+// Синхронная инициализация из localStorage
+function initSync() {
+  if (initialized.value) return
+  
+  const userData = localStorage.getItem('cms_user')
+  if (userData) {
+    currentUser.value = JSON.parse(userData)
+  } else {
+    currentUser.value = { id: '1', name: 'Admin', email: 'admin@test.com', roleId: 'admin' }
+  }
+  
+  const rolesData = localStorage.getItem('cms_roles')
+  if (rolesData) {
+    roles.value = JSON.parse(rolesData)
+  }
+  
+  initialized.value = true
+}
+
+// Вызываем сразу при импорте
+initSync()
+
 export function useAuth() {
   const init = async () => {
     if (initialized.value) return
+    initSync()
+    // Дополнительная асинхронная загрузка для свежих данных
     currentUser.value = await userApi.getCurrent()
     roles.value = await rolesApi.getAll()
-    initialized.value = true
   }
 
   const currentRole = computed<Role | null>(() => {
