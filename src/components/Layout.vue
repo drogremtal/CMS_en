@@ -144,15 +144,64 @@
           </router-link>
 
           <!-- Profile -->
-          <div class="flex items-center gap-2 pl-3 pr-2 py-1.5 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          <div ref="profileMenuRef" class="relative">
+            <button
+              @click="showProfileMenu = !showProfileMenu"
+              class="flex items-center gap-2 pl-3 pr-2 py-1.5 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+            >
+              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div class="hidden md:block text-left">
+                <p class="text-sm font-medium text-slate-700">Администратор</p>
+                <p class="text-xs text-slate-400">admin@company.ru</p>
+              </div>
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
-            </div>
-            <div class="hidden md:block text-left">
-              <p class="text-sm font-medium text-slate-700">Администратор</p>
-              <p class="text-xs text-slate-400">admin@company.ru</p>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              v-if="showProfileMenu"
+              class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2"
+            >
+              <div class="px-4 py-2 border-b border-slate-100">
+                <p class="text-sm font-medium text-slate-800">Администратор</p>
+                <p class="text-xs text-slate-400">Роль: Супер-администратор</p>
+              </div>
+              <button
+                @click="showProfileMenu = false"
+                class="w-full px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Профиль
+              </button>
+              <router-link
+                to="/settings"
+                @click="showProfileMenu = false"
+                class="w-full px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Настройки
+              </router-link>
+              <div class="border-t border-slate-100 my-1"></div>
+              <button
+                @click="handleLogout"
+                class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Выйти
+              </button>
             </div>
           </div>
         </div>
@@ -167,14 +216,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 
 const collapsed = ref(false)
 const route = useRoute()
+const showProfileMenu = ref(false)
+const profileMenuRef = ref<HTMLElement | null>(null)
 
 const { canAccessPage, init: initAuth } = useAuth()
+
+const handleLogout = () => {
+  showProfileMenu.value = false
+  // Здесь можно добавить логику выхода
+  alert('Вы вышли из системы')
+}
+
+// Закрытие меню при клике вне его
+const handleClickOutside = (event: MouseEvent) => {
+  if (profileMenuRef.value && !profileMenuRef.value.contains(event.target as Node)) {
+    showProfileMenu.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const navItems = [
   { path: '/', label: 'Дашборд', icon: 'dashboard', permissions: ['pages.view'] },
