@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EnterpriseCMS.Core\EnterpriseCMS.Core.csproj" />
+    <ProjectReference Include="..\EnterpriseCMS.Infrastructure\EnterpriseCMS.Infrastructure.csproj" />
+    <ProjectReference Include="..\EnterpriseCMS.Services\EnterpriseCMS.Services.csproj" />
+  </ItemGroup>
+
+</Project>
