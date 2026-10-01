@@ -1,0 +1,15 @@
+/workspace/CMS/EnterpriseCMS.Infrastructure/bin/Release/net8.0/EnterpriseCMS.Infrastructure.deps.json
+/workspace/CMS/EnterpriseCMS.Infrastructure/bin/Release/net8.0/EnterpriseCMS.Infrastructure.dll
+/workspace/CMS/EnterpriseCMS.Infrastructure/bin/Release/net8.0/EnterpriseCMS.Infrastructure.pdb
+/workspace/CMS/EnterpriseCMS.Infrastructure/bin/Release/net8.0/EnterpriseCMS.Core.dll
+/workspace/CMS/EnterpriseCMS.Infrastructure/bin/Release/net8.0/EnterpriseCMS.Core.pdb
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/EnterpriseCMS.Infrastructure.csproj.AssemblyReference.cache
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/EnterpriseCMS.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/EnterpriseCMS.Infrastructure.AssemblyInfoInputs.cache
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/EnterpriseCMS.Infrastructure.AssemblyInfo.cs
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/EnterpriseCMS.Infrastructure.csproj.CoreCompileInputs.cache
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/Enterpri.EB0354F0.Up2Date
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/EnterpriseCMS.Infrastructure.dll
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/refint/EnterpriseCMS.Infrastructure.dll
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/EnterpriseCMS.Infrastructure.pdb
+/workspace/CMS/EnterpriseCMS.Infrastructure/obj/Release/net8.0/ref/EnterpriseCMS.Infrastructure.dll

@@ -1,0 +1,12 @@
+/workspace/CMS/EnterpriseCMS.Core/bin/Debug/net8.0/EnterpriseCMS.Core.deps.json
+/workspace/CMS/EnterpriseCMS.Core/bin/Debug/net8.0/EnterpriseCMS.Core.dll
+/workspace/CMS/EnterpriseCMS.Core/bin/Debug/net8.0/EnterpriseCMS.Core.pdb
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/EnterpriseCMS.Core.csproj.AssemblyReference.cache
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/EnterpriseCMS.Core.GeneratedMSBuildEditorConfig.editorconfig
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/EnterpriseCMS.Core.AssemblyInfoInputs.cache
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/EnterpriseCMS.Core.AssemblyInfo.cs
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/EnterpriseCMS.Core.csproj.CoreCompileInputs.cache
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/EnterpriseCMS.Core.dll
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/refint/EnterpriseCMS.Core.dll
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/EnterpriseCMS.Core.pdb
+/workspace/CMS/EnterpriseCMS.Core/obj/Debug/net8.0/ref/EnterpriseCMS.Core.dll
